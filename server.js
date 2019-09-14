@@ -6,6 +6,9 @@ var session = require("express-session");
 var bodyParser = require('body-parser');
 var mongoose = require("mongoose")
 
+var dotend = require('dotenv').config()
+
+
 
 
 
@@ -24,7 +27,11 @@ app.set("view engine", "ejs");
 
 require('./routes/routes.js')(app)
 
-var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/newsscraper'
+
+
+MONGODB_URI = process.env.MONGODB_URI
+
+
 mongoose.connect(MONGODB_URI);
 
 
