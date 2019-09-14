@@ -1,8 +1,6 @@
 /* MONGOOSE SETUP */
 const mongoose = require('mongoose');
 
-var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/newsscraper'
-mongoose.connect(MONGODB_URI);
 
 const Schema = mongoose.Schema;
 const UserDetail = new Schema({
