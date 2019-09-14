@@ -20,7 +20,7 @@ app.get('/',  function (req, res) {
       };
     res.render("pages/auth", ejsObj)});
 
-app.get('/home', isAuthenticated , function (req, res) {
+app.get('/home', function (req, res) {
 var ejsObj = {
     pageTitle: "Home",
     user: req.user,
