@@ -114,6 +114,14 @@ $(document).on ("click", "#update-scrape", function (event)  {
 
 })
 
+$(document).on ("click", "#home", function (event)  {
+  event.preventDefault();
+  jQuery.noConflict();
+  window.location.href="/home"
+ 
+
+})
+
 $(document).on ("click", ".remove-comment", function (event)  {
   event.preventDefault();
   jQuery.noConflict();
