@@ -200,6 +200,23 @@ app.get("/scrape", function(req, res) {
         res.json(err);
       });
   });
+
+  app.post("/deletecomment/:id", function(req, res) {
+   
+    db.Comment.remove({_id: req.params.id})
+      .then(function(dbComment) {
+
+        return db.Article.updateOne({ _id: req.body.articleid }, {$pull:{ comments: req.params.id }});
+      })
+      .then(function(dbComment) {
+        // If we were able to successfully update an Article, send it back to the client
+        res.json(dbComment);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
   
   
 

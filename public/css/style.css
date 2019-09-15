@@ -51,25 +51,35 @@ overflow: scroll
 padding-top:5px;
 }
 
-.card-footer {
+.card-footer, .modal-footer {
 background-color: #cf0900;
 color:white;
 }
 
-.card-header {
+.card-header, .modal-header {
     background-color: #00408b; 
     color:white
     }
 
 .comment:hover {
-color:blue;
+color:#00408b; 
 font-size:24px;
 }   
 
 .like:hover {
-    color:blue;
+    color:#00408b; 
     font-size:28px;
     }  
+
+.remove-comment {
+    color:#cf0900;
+}
+
+.modal-close {
+    background-color:#00408b; 
+    color:white
+
+}
 
 
 

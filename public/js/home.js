@@ -114,52 +114,89 @@ $(document).on ("click", "#update-scrape", function (event)  {
 
 })
 
+$(document).on ("click", ".remove-comment", function (event)  {
+  event.preventDefault();
+  jQuery.noConflict();
+  var commentid = $(this).attr("comment-id")
+  var articleid = $(this).attr("article-id")
+  console.log("Comment id is " + commentid)
+  console.log("Article id is " + articleid)
+
+  $.ajax({
+    method: "POST",
+    url: "/deletecomment/" + commentid,
+    data: {
+      // Value taken from title input
+      articleid: articleid,
+     
+    }
+  
+  })
+  .then(function(data) {
+    // Log the response
+    console.log(data);
+    // Empty the notes section
+   
+
+    popComments(articleid)
+  });
+    
+  
+
+})
+
+var popComments = function (articleid) {
+  $('#article-comments').empty()
+  $.get("/articles/" + articleid, function(articledata) {
+
+    console.log("Article comments length is " + articledata.comments.length)
+  
+    for (i=0; i < articledata.comments.length; i++) {
+  
+      var commentRow = $('<div>')
+      commentRow.addClass("row")
+      commentRow.attr("id", "commentRow"+i)
+  
+      var comment = $("<div>")
+      comment.addClass("col-md-8 float-left")
+      comment.attr("id", "comment"+ i)
+      comment.html("<strong>"+ articledata.comments[i].first+ "</strong>" + " said " + articledata.comments[i].comment)
+  
+      $('#article-comments').append(commentRow)
+      $('#commentRow'+i).append(comment)
+  
+  
+      if( articledata.comments[i].author === loggedInUserID) {
+        console.log("Matched " + i)
+        
+        var deleteComment =$("<div>")
+        deleteComment.addClass("col-md-4 float-right remove-comment")
+        deleteComment.attr("comment-id", articledata.comments[i]._id)
+        deleteComment.attr("article-id", articledata._id)
+  
+        deleteComment.html('<i class="far fa-minus-square"></i>  Delete')
+  
+        
+       
+        $("#commentRow"+i).append(deleteComment)
+    
+        }
+      
+    }
+  
+  })
+/*end popComments*/
+}
+
 $(document).on ("click", ".comment", function (event)  {
   event.preventDefault();
   jQuery.noConflict();
   var articleid = $(this).attr("data-id")
   $("#submit-comment").attr("data-id", articleid)
-  $('#article-comments').empty()
+  
   $("#comments-modal").modal("show")
 
-$.get("/articles/" + articleid, function(articledata) {
-
-  console.log("Article comments length is " + articledata.comments.length)
-
-  for (i=0; i < articledata.comments.length; i++) {
-
-    var commentRow = $('<row>')
-    commentRow.attr("id", "commentRow"+i)
-
-    var comment = $("<span>")
-    comment.addClass("d-block float-left")
-    comment.attr("id", "comment"+ i)
-    comment.html("<strong>"+ articledata.comments[i].first+ "</strong>" + " said " + articledata.comments[i].comment)
-
-    $('#article-comments').append(commentRow)
-    $('#commentRow'+i).append(comment)
-
-
-    if( articledata.comments[i].author === loggedInUserID) {
-      console.log("Matched " + i)
-      
-      var deleteComment =$("<span>")
-      deleteComment.addClass("text-right")
-
-      deleteComment.html('<i class="far fa-minus-square"></i>  Remove')
-
-      
-     
-      $("#comment"+i).append(deleteComment)
-  
-      }
-
-  
-
-    
-  }
-
-})
+popComments(articleid)
  
 
 })
@@ -188,7 +225,7 @@ $(document).on ("click", "#submit-comment", function (event)  {
       // Empty the notes section
       $("#new-comment").val("")
 
-      $("#comments-modal").modal("hide")
+      popComments(articleid)
     });
 
 
