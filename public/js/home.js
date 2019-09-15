@@ -8,6 +8,10 @@ $(document).ready(function() {
  
     $(".member-name").text(userdata.first);
     $(".welcome").removeClass("d-none")
+    $("#home").removeClass("d-none")
+    $("#my-articles").removeClass("d-none")
+    $("#update-scrape").removeClass("d-none")
+    $("#logout").removeClass("d-none")
 })
 
   var getArticles =function() {
@@ -118,6 +122,14 @@ $(document).on ("click", "#home", function (event)  {
   event.preventDefault();
   jQuery.noConflict();
   window.location.href="/home"
+ 
+
+})
+
+$(document).on ("click", "#logout", function (event)  {
+  event.preventDefault();
+  jQuery.noConflict();
+  window.location.href="/logout"
  
 
 })
