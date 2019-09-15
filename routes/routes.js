@@ -14,13 +14,15 @@ module.exports = function(app) {
 /* Auth Routes */
 
 app.get('/',  function (req, res) {
+
+  
     var ejsObj = {
         pageTitle: "Auth"
        
       };
     res.render("pages/auth", ejsObj)});
 
-app.get('/home', function (req, res) {
+app.get('/home',isAuthenticated, function (req, res) {
 var ejsObj = {
     pageTitle: "Home",
     user: req.user,

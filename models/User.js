@@ -1,9 +1,9 @@
 /* MONGOOSE SETUP */
-const mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 
-const Schema = mongoose.Schema;
-const UserDetail = new Schema({
+var Schema = mongoose.Schema;
+var UserDetail = new Schema({
       username: String,
       password: String,
       first: String,
@@ -15,6 +15,6 @@ const UserDetail = new Schema({
       }]
     });
 
-const UserDetails = mongoose.model('userInfo', UserDetail, 'userInfo');
+var UserDetails = mongoose.model('userInfo', UserDetail, 'userInfo');
 
 module.exports = UserDetails
