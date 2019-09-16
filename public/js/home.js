@@ -270,6 +270,7 @@ $(document).on ("click", ".article-thumb", function (event)  {
   
 
   $.get("/articles/" + articleid, function(articledata) {
+    console.log("Article data " + articledata)
 
     var titleH4= $("<h4>")
     titleH4.text(articledata.title)

@@ -150,7 +150,7 @@ app.get("/scrape", function(req, res) {
     
       .populate("comments")
       .then(function(dbArticle) {
-
+        res.json(dbArticle)
       })
       .catch(function(err) {
       
