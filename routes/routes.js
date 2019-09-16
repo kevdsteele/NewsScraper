@@ -37,6 +37,7 @@ app.get("/logout", function(req, res) {
     res.redirect("/");
   });
 
+/* get user info for diplay*/
   app.get("/api/user_data", function(req, res) {
     if (!req.user) {
       // The user is not logged in, send back an empty object
@@ -65,20 +66,16 @@ app.post('/',
 
 /* Politico scrapping routes */
 
-
-// A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
-    // First, we grab the body of the html with axios
-    axios.get("https://politico.com/news/2020-elections/").then(function(response) {
-      // Then, we load that into cheerio and save it to $ for a shorthand selector
+   
+    axios.get("https://politico.com/news/2020-elections/2").then(function(response) {
+
       var $ = cheerio.load(response.data);
-  
-      // Now, we grab every h2 within an article tag, and do the following:
+
       $("li article").each(function(i, element) {
-        // Save an empty result object
+     
         var result = {};
-  
-        // Add the text and href of every link, and save them as properties of the result object
+
         result.title = $(this).find("h1")
           .children("a")
           .text();
@@ -86,31 +83,32 @@ app.get("/scrape", function(req, res) {
           .children("a")
           .attr("href");
 
+          /* Politico shows images and videos. I used truthy logic to grab the standard img or the video still*/
           result.img = $(this).find(".fig-graphic")
-          .find("img").attr("src")
+         .find("img").attr("src") || $(this).find("video").text().substr(54).slice(0,-22)
 
+        
           result.subhead = $(this).find("p.subhead").text()
           
           result.summary = $(this).find(".story-text").children("p").text().slice(0,-12)
 
           result.published = moment($(this).find("time").attr("datetime")).format("MM/DD/YYYY HH:MM")
   
-        // Create a new Article using the `result` object built from scraping
         
-     
+ 
         db.Article.create(result)
           .then(function(dbArticle) {
-            // View the added result in the console
+          
             console.log(dbArticle);
           })
           .catch(function(err) {
-            // If an error occurred, log it
+           
             console.log(err);
           });
         
       });
   
-      // Send a message to the client
+   
       res.send("Scrape Complete");
     });
   });
@@ -118,8 +116,7 @@ app.get("/scrape", function(req, res) {
   /* article routes */
 
   app.get("/articles", function(req, res) {
-    // Query: In our database, go to the animals collection, then "find" everything,
-    // but this time, sort it by name (1 means ascending order)
+    //Get articles and sort by date published
     db.Article.find({}).sort({published:-1}).find()
     .populate("comments")
     .then(function(dbArticle) {
@@ -148,16 +145,15 @@ app.get("/scrape", function(req, res) {
  
 
   app.get("/articles/:id", function(req, res) {
-    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+
     db.Article.findOne({ _id: req.params.id })
-      // ..and populate all of the notes associated with it
+    
       .populate("comments")
       .then(function(dbArticle) {
-        // If we were able to successfully find an Article with the given id, send it back to the client
-        res.json(dbArticle);
+
       })
       .catch(function(err) {
-        // If an error occurred, send it to the client
+      
         res.json(err);
       });
   });
@@ -183,20 +179,18 @@ app.get("/scrape", function(req, res) {
   })
 
   app.post("/comments/:id", function(req, res) {
-    // Create a new note and pass the req.body to the entry
+   
     db.Comment.create({first: req.user.first,author: req.user.id, comment: req.body.comment})
       .then(function(dbComment) {
-        // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
-        // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-        // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+
         return db.Article.updateOne({ _id: req.params.id }, {$addToSet:{ comments: dbComment._id }});
       })
       .then(function(dbComment) {
-        // If we were able to successfully update an Article, send it back to the client
+
         res.json(dbComment);
       })
       .catch(function(err) {
-        // If an error occurred, send it to the client
+ 
         res.json(err);
       });
   });
@@ -209,11 +203,11 @@ app.get("/scrape", function(req, res) {
         return db.Article.updateOne({ _id: req.body.articleid }, {$pull:{ comments: req.params.id }});
       })
       .then(function(dbComment) {
-        // If we were able to successfully update an Article, send it back to the client
+
         res.json(dbComment);
       })
       .catch(function(err) {
-        // If an error occurred, send it to the client
+      
         res.json(err);
       });
   });
