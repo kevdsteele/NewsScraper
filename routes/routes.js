@@ -30,7 +30,7 @@ var ejsObj = {
   };
 res.render("pages/home", ejsObj)});
 
-app.get('/error', (req, res) => res.send("error logging in"));
+app.get('/error', (req, res) => res.send("Error logging in. Please check your username and password"));
 
 app.get("/logout", function(req, res) {
     req.logout();
