@@ -68,7 +68,7 @@ app.post('/',
 
 app.get("/scrape", function(req, res) {
    
-    axios.get("https://politico.com/news/2020-elections/2").then(function(response) {
+    axios.get("https://politico.com/news/2020-elections/").then(function(response) {
 
       var $ = cheerio.load(response.data);
 
